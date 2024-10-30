@@ -97,7 +97,7 @@ def create_target_profile():
         "> Do you want to add some random numbers at the end of words? Y/[N]:"
     ).lower()
     profile["leetmode"] = input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
-
+    return profile
 
 """
 Prints team logo, creates profile, and obtains password complexity requirements from user
@@ -106,7 +106,7 @@ Prints team logo, creates profile, and obtains password complexity requirements 
 
 def main():
     print_sniper()
-    create_target_profile()
+    target_profile = create_target_profile()
 
     password_complexity = int(
         input(
