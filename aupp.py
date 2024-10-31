@@ -1,5 +1,54 @@
 from itertools import permutations
 import re
+import configparser
+import os
+import functools
+import sys
+
+CONFIG = {}
+
+
+def read_config(filename):
+    """Read the given configuration file and update global variables to reflect
+    changes (CONFIG)."""
+
+    if os.path.isfile(filename):
+        # global CONFIG
+
+        # Reading configuration file
+        config = configparser.ConfigParser()
+        config.read(filename)
+
+        CONFIG["global"] = {
+            "years": config.get("years", "years").split(","),
+            "chars": config.get("specialchars", "chars").split(","),
+            "numfrom": config.getint("nums", "from"),
+            "numto": config.getint("nums", "to"),
+            "wcfrom": config.getint("nums", "wcfrom"),
+            "wcto": config.getint("nums", "wcto"),
+            "threshold": config.getint("nums", "threshold"),
+            "alectourl": config.get("alecto", "alectourl"),
+            "dicturl": config.get("downloader", "dicturl"),
+        }
+
+        # 1337 mode configs, well you can add more lines if you add it to the
+        # config file too.
+        leet = functools.partial(config.get, "leet")
+        leetc = {}
+        letters = {"a", "i", "e", "t", "o", "s", "g", "z"}
+
+        for letter in letters:
+            leetc[letter] = config.get("leet", letter)
+
+        CONFIG["LEET"] = leetc
+
+        return True
+
+    else:
+        print("Configuration file " + filename + " not found!")
+        sys.exit("Exiting.")
+
+        return False
 
 
 def print_sniper():
@@ -113,7 +162,10 @@ Prints team logo, creates profile, and obtains password complexity requirements 
 
 
 def main():
+    read_config("aupp.cfg")
+
     print_sniper()
+
     target_profile = create_target_profile()
 
     password_complexity = int(
