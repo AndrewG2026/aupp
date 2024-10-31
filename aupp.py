@@ -13,29 +13,33 @@ import urllib.request
 import time
 
 def print_sniper():
-    # print(" ___________ ")
-    # print(" \033[07m  cupp.py! \033[27m                # \033[07mC\033[27mommon")
-    # print("      \                     # \033[07mU\033[27mser")
-    # print("       \   \033[1;31m,__,\033[1;m             # \033[07mP\033[27masswords")
-    # print(
-    #     "        \  \033[1;31m(\033[1;moo\033[1;31m)____\033[1;m         # \033[07mP\033[27mrofiler"
-    # )
-    # print("           \033[1;31m(__)    )\ \033[1;m  ")
-    # print(
-    #     "           \033[1;31m   ||--|| \033[1;m\033[05m*\033[25m\033[1;m      [ Muris Kurgas | j0rgan@remote-exploit.org ]"
-    # )
-    # print(28 * " " + "[ Mebus | https://github.com/Mebus/]\r\n")
-    print("          \033[1;31m_________                   _______\033[1;m" + 5 * " " + "# \033[07mC\033[27mommon")
-    print("\033[1;31m_-----____/   ========================|______|\033[1;m" + 4 * " " + "# \033[07mU\033[27mser")
-    print("\033[1;31m|           ______________/\033[1;m" + 23 * " " + "# \033[07mP\033[27masswords")
-    print("\033[1;31m|    ___--_/(_)       ^\033[1;m" + 27 * " " + "# \033[07mP\033[27mrofiler")
+    print(
+        "          \033[1;31m_________                   _______\033[1;m"
+        + 5 * " "
+        + "# \033[07mC\033[27mommon"
+    )
+    print(
+        "\033[1;31m_-----____/   ========================|______|\033[1;m"
+        + 4 * " "
+        + "# \033[07mU\033[27mser"
+    )
+    print(
+        "\033[1;31m|           ______________/\033[1;m"
+        + 23 * " "
+        + "# \033[07mP\033[27masswords"
+    )
+    print(
+        "\033[1;31m|    ___--_/(_)       ^\033[1;m"
+        + 27 * " "
+        + "# \033[07mP\033[27mrofiler"
+    )
     print("\033[1;31m|___ ---\033[1;m")
     print("This branch was created by the students at Anderson University")
     print(18 * " " + "[ Muris Kurgas | j0rgan@remote-exploit.org ]")
     print(25 * " " + "[ Mebus | https://github.com/Mebus/ ]\r\n")
 
 
-def interactive():
+def create_target_profile():
     """Implementation of the -i switch. Interactively question the user and
     create a password dictionary file based on the answer."""
 
@@ -59,6 +63,13 @@ def interactive():
         print("\r\n[-] You must enter 8 digits for birthday!")
         birthdate = input("> Birthdate (DDMMYYYY): ")
     profile["birthdate"] = str(birthdate)
+
+    profile["phone_number"] = input("> Phone Number (no area code) xxxxxxxxxx: ")
+    while (
+        len(profile["phone_number"]) != 0 and len(profile["phone_number"]) != 10
+    ) or re.search(r"\D+", profile["phone_number"]):
+        print("\r\n[-] You must enter 10 digits with no characters for a phone number!")
+        profile["phone_number"] = input("> Phone Number (no area code): ")
 
     print("\r\n")
 
@@ -103,18 +114,9 @@ def interactive():
         "> Do you want to add some random numbers at the end of words? Y/[N]:"
     ).lower()
     profile["leetmode"] = input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
-    
-    generate_wordlist_from_profile(profile)
+    return profile
 
-print_sniper()
-interactive()
-
-
-def least_complex():
-    pass
-
-
-def generate_wordlist_from_profile(profile):
+def least_complex(profile):
     """ Generates a wordlist from a given profile """
 
     chars = CONFIG["global"]["chars"]
@@ -494,3 +496,57 @@ def read_config(filename):
         sys.exit("Exiting.")
 
         return False
+
+def komb(seq, start, special=""):
+    for mystr in seq:
+        for mystr1 in start:
+            yield mystr + special + mystr1
+
+def concats(seq, start, stop):
+    for mystr in seq:
+        for num in range(start, stop):
+            yield mystr + str(num)
+
+def make_leet(x):
+    """convert string to leet"""
+    for letter, leetletter in CONFIG["LEET"].items():
+        x = x.replace(letter, leetletter)
+    return x
+
+"""
+Prints team logo, creates profile, and obtains password complexity requirements from user
+"""
+
+
+def main():
+    print_sniper()
+    target_profile = create_target_profile()
+
+    password_complexity = int(
+        input(
+            "How complex is the password (1 => Least Complexity, 2 => Medium Complexity, 3 => Most Complex): "
+        )
+    )
+
+    while password_complexity > 3 or password_complexity == 0:
+        password_complexity = int(
+            input(
+                "Enter a value that is between 1 and 3! (1 => Least Complexity, 2 => Medium Complexity, 3 => Most Complex): "
+            )
+        )
+
+    # Phone number complexity : ran_phone_num = list(itertools.permutations((profile["phone_number"]+rev_name),len(profile["phone_number"])))
+    if password_complexity == 1:
+        # call least complex function
+        least_complex(target_profile)
+    elif password_complexity == 2:
+        # call the medium complexity function
+        print("Medium Complex")
+    else:
+        print("Most complex")
+        # call the most complex function
+
+
+if __name__ == "__main__":
+    main()
+
