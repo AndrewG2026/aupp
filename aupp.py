@@ -1,18 +1,35 @@
 from itertools import permutations
-import re 
+import re
+
 
 def print_sniper():
-    print("          \033[1;31m_________                   _______\033[1;m" + 5 * " " + "# \033[07mC\033[27mommon")
-    print("\033[1;31m_-----____/   ========================|______|\033[1;m" + 4 * " " + "# \033[07mU\033[27mser")
-    print("\033[1;31m|           ______________/\033[1;m" + 23 * " " + "# \033[07mP\033[27masswords")
-    print("\033[1;31m|    ___--_/(_)       ^\033[1;m" + 27 * " " + "# \033[07mP\033[27mrofiler")
+    print(
+        "          \033[1;31m_________                   _______\033[1;m"
+        + 5 * " "
+        + "# \033[07mC\033[27mommon"
+    )
+    print(
+        "\033[1;31m_-----____/   ========================|______|\033[1;m"
+        + 4 * " "
+        + "# \033[07mU\033[27mser"
+    )
+    print(
+        "\033[1;31m|           ______________/\033[1;m"
+        + 23 * " "
+        + "# \033[07mP\033[27masswords"
+    )
+    print(
+        "\033[1;31m|    ___--_/(_)       ^\033[1;m"
+        + 27 * " "
+        + "# \033[07mP\033[27mrofiler"
+    )
     print("\033[1;31m|___ ---\033[1;m")
     print("This branch was created by the students at Anderson University")
     print(18 * " " + "[ Muris Kurgas | j0rgan@remote-exploit.org ]")
     print(25 * " " + "[ Mebus | https://github.com/Mebus/ ]\r\n")
 
 
-def interactive():
+def create_target_profile():
     """Implementation of the -i switch. Interactively question the user and
     create a password dictionary file based on the answer."""
 
@@ -80,4 +97,40 @@ def interactive():
         "> Do you want to add some random numbers at the end of words? Y/[N]:"
     ).lower()
     profile["leetmode"] = input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
+    return profile
 
+"""
+Prints team logo, creates profile, and obtains password complexity requirements from user
+"""
+
+
+def main():
+    print_sniper()
+    target_profile = create_target_profile()
+
+    password_complexity = int(
+        input(
+            "How complex is the password (1 => Least Complexity, 2 => Medium Complexity, 3 => Most Complex): "
+        )
+    )
+
+    while password_complexity > 3 or password_complexity == 0:
+        password_complexity = int(
+            input(
+                "Enter a value that is between 1 and 3! (1 => Least Complexity, 2 => Medium Complexity, 3 => Most Complex): "
+            )
+        )
+
+    if password_complexity == 1:
+        # call least complex function
+        print("Least Complex")
+    elif password_complexity == 2:
+        # call the medium complexity function
+        print("Medium Complex")
+    else:
+        print("Most complex")
+        # call the most complex function
+
+
+if __name__ == "__main__":
+    main()
