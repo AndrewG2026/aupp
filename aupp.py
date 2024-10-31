@@ -87,7 +87,7 @@ def create_target_profile():
 
     profile["words"] = [""]
     words1 = input(
-        "> Do you want to add some key words about the victim? Y/[N]: "
+        "> Do you want to add some key words about the victim (Keywords will only be included in Medium Complexity)? Y/[N]: "
     ).lower()
     words2 = ""
     if words1 == "y":
