@@ -54,6 +54,13 @@ def create_target_profile():
         birthdate = input("> Birthdate (DDMMYYYY): ")
     profile["birthdate"] = str(birthdate)
 
+    profile["phone_number"] = input("> Phone Number (no area code) xxxxxxxxxx: ")
+    while (
+        len(profile["phone_number"]) != 0 and len(profile["phone_number"]) != 10
+    ) or re.search(r"\D+", profile["phone_number"]):
+        print("\r\n[-] You must enter 10 digits with no characters for a phone number!")
+        profile["phone_number"] = input("> Phone Number (no area code): ")
+
     print("\r\n")
 
     profile["wife"] = input("> Partners) name: ").lower()
@@ -99,6 +106,7 @@ def create_target_profile():
     profile["leetmode"] = input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
     return profile
 
+
 """
 Prints team logo, creates profile, and obtains password complexity requirements from user
 """
@@ -121,6 +129,7 @@ def main():
             )
         )
 
+    # Phone number complexity : ran_phone_num = list(itertools.permutations((profile["phone_number"]+rev_name),len(profile["phone_number"])))
     if password_complexity == 1:
         # call least complex function
         print("Least Complex")
