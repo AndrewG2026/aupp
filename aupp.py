@@ -50,6 +50,13 @@ def read_config(filename):
 
         return False
 
+"""
+Converts the string to leet
+"""
+def make_leet(x):
+    for letter, leetletter in CONFIG["LEET"].items():
+        x = x.replace(letter, leetletter)
+    return x
 
 def print_sniper():
     print(
