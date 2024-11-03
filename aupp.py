@@ -159,7 +159,6 @@ def create_target_profile():
     profile["randnum"] = input(
         "> Do you want to add some random numbers at the end of words? Y/[N]:"
     ).lower()
-    profile["leetmode"] = input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
     return profile
 
 
