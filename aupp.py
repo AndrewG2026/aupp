@@ -50,21 +50,37 @@ def read_config(filename):
 
         return False
 
+
 def transform_word(word):
     return {
-        'capitalize': word.capitalize(),
-        'title': word.title(),
-        'swapcase': word.swapcase(),
-        'lower': word.lower(),
-        'upper': word.upper()
+        "capitalize": word.capitalize(),
+        "title": word.title(),
+        "swapcase": word.swapcase(),
+        "lower": word.lower(),
+        "upper": word.upper(),
     }
+
 
 def transform_words(words):
     return {
-        word: {method: getattr(transform_word(word), method)
-               for method in ['capitalize', 'title', 'swapcase', 'lower', 'upper']}
+        word: {
+            method: getattr(transform_word(word), method)
+            for method in ["capitalize", "title", "swapcase", "lower", "upper"]
+        }
         for word in words
     }
+
+
+"""
+Converts the string to leet
+"""
+
+
+def make_leet(x):
+    for letter, leetletter in CONFIG["LEET"].items():
+        x = x.replace(letter, leetletter)
+    return x
+
 
 def print_sniper():
     print(
@@ -167,20 +183,22 @@ def create_target_profile():
     profile["randnum"] = input(
         "> Do you want to add some random numbers at the end of words? Y/[N]:"
     ).lower()
-    profile["leetmode"] = input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
     return profile
+
 
 """
 Provides additional complextiy to the wordlist utilizing the target's keywords
 """
+
+
 def medium_complexity(target_profile):
     # This is psuedo code! Need to wait until least complex is created
     # Get every combination of the birthdays, names of target, wife, and kid,
     med_comp_list = []
     least_comp_wl = least_complextity()
-    wbd = least_comp_wl["wife_birthday"] # combination of wifes b-day
-    kidb = least_comp_wl["kid_birthday"] # combination of kid b-day
-    tbd = least_comp_wl["target_birthday"] # combinations of targets b-day
+    wbd = least_comp_wl["wife_birthday"]  # combination of wifes b-day
+    kidb = least_comp_wl["kid_birthday"]  # combination of kid b-day
+    tbd = least_comp_wl["target_birthday"]  # combinations of targets b-day
 
     # Take the key words and perform uppercase, lowercase, title case, capitalize case, and swapcase
 
@@ -192,8 +210,15 @@ def medium_complexity(target_profile):
     # and make threads per each partition
     # Using math we can combine the parts of the transformed words list +the complete list of the birthdays
     # If the length of transformed_words = 150, we can divide it into partitions of 10 elements each + complete list of target info
+    # Or just use the permustaion command once and really brute force it
 
-    # return completed list
+    # In config file, you can increase the number of leet characters
+    for x in med_comp_list:
+        x = make_leet(x)
+        med_comp_list.append(x)
+
+    return med_comp_list
+
 
 """
 Prints team logo, creates profile, and obtains password complexity requirements from user
