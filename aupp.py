@@ -50,6 +50,21 @@ def read_config(filename):
 
         return False
 
+def transform_word(word):
+    return {
+        'capitalize': word.capitalize(),
+        'title': word.title(),
+        'swapcase': word.swapcase(),
+        'lower': word.lower(),
+        'upper': word.upper()
+    }
+
+def transform_words(words):
+    return {
+        word: {method: getattr(transform_word(word), method)
+               for method in ['capitalize', 'title', 'swapcase', 'lower', 'upper']}
+        for word in words
+    }
 
 def print_sniper():
     print(
@@ -155,6 +170,30 @@ def create_target_profile():
     profile["leetmode"] = input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
     return profile
 
+"""
+Provides additional complextiy to the wordlist utilizing the target's keywords
+"""
+def medium_complexity(target_profile):
+    # This is psuedo code! Need to wait until least complex is created
+    # Get every combination of the birthdays, names of target, wife, and kid,
+    med_comp_list = []
+    least_comp_wl = least_complextity()
+    wbd = least_comp_wl["wife_birthday"] # combination of wifes b-day
+    kidb = least_comp_wl["kid_birthday"] # combination of kid b-day
+    tbd = least_comp_wl["target_birthday"] # combinations of targets b-day
+
+    # Take the key words and perform uppercase, lowercase, title case, capitalize case, and swapcase
+
+    transformed_words = transform_words(target_profile["words"])
+
+    # Using the birthdays of the target, as well as nicknames, names, and surnames
+
+    # Will need to partition the list into different sections
+    # and make threads per each partition
+    # Using math we can combine the parts of the transformed words list +the complete list of the birthdays
+    # If the length of transformed_words = 150, we can divide it into partitions of 10 elements each + complete list of target info
+
+    # return completed list
 
 """
 Prints team logo, creates profile, and obtains password complexity requirements from user
@@ -186,8 +225,7 @@ def main():
         # call least complex function
         print("Least Complex")
     elif password_complexity == 2:
-        # call the medium complexity function
-        print("Medium Complex")
+        med_comp_wl = medium_complexity(target_profile)
     else:
         print("Most complex")
         # call the most complex function
