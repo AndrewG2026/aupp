@@ -176,10 +176,10 @@ def least_complex(profile):
     petup = profile["pet"].title()
     companyup = profile["company"].title()
 
-    wordsup = []
-    wordsup = list(map(str.title, profile["words"]))
+    # wordsup = []
+    # wordsup = list(map(str.title, profile["words"]))
 
-    word = profile["words"] + wordsup
+    # word = profile["words"] + wordsup
 
     # reverse a name
 
@@ -343,14 +343,14 @@ def least_complex(profile):
     kombi[6] += list(komb(kombinaaw, years, "_"))
     kombi[7] = list(komb(kombinaak, years))
     kombi[7] += list(komb(kombinaak, years, "_"))
-    kombi[8] = list(komb(word, bdss))
-    kombi[8] += list(komb(word, bdss, "_"))
-    kombi[9] = list(komb(word, wbdss))
-    kombi[9] += list(komb(word, wbdss, "_"))
-    kombi[10] = list(komb(word, kbdss))
-    kombi[10] += list(komb(word, kbdss, "_"))
-    kombi[11] = list(komb(word, years))
-    kombi[11] += list(komb(word, years, "_"))
+    # kombi[8] = list(komb(word, bdss))
+    # kombi[8] += list(komb(word, bdss, "_"))
+    # kombi[9] = list(komb(word, wbdss))
+    # kombi[9] += list(komb(word, wbdss, "_"))
+    # kombi[10] = list(komb(word, kbdss))
+    # kombi[10] += list(komb(word, kbdss, "_"))
+    # kombi[11] = list(komb(word, years))
+    # kombi[11] += list(komb(word, years, "_"))
     kombi[12] = [""]
     kombi[13] = [""]
     kombi[14] = [""]
@@ -358,7 +358,7 @@ def least_complex(profile):
     kombi[16] = [""]
     kombi[21] = [""]
     if profile["randnum"] == "y":
-        kombi[12] = list(concats(word, numfrom, numto))
+        # kombi[12] = list(concats(word, numfrom, numto))
         kombi[13] = list(concats(kombinaa, numfrom, numto))
         kombi[14] = list(concats(kombinaac, numfrom, numto))
         kombi[15] = list(concats(kombinaaw, numfrom, numto))
@@ -383,7 +383,7 @@ def least_complex(profile):
         komb002 = list(komb(kombinaac, profile["spechars"]))
         komb003 = list(komb(kombinaaw, profile["spechars"]))
         komb004 = list(komb(kombinaak, profile["spechars"]))
-        komb005 = list(komb(word, profile["spechars"]))
+        # komb005 = list(komb(word, profile["spechars"]))
         komb006 = list(komb(reverse, profile["spechars"]))
 
     print("[+] Sorting list and removing duplicates...")
@@ -396,7 +396,7 @@ def least_complex(profile):
     komb_unique02 = list(dict.fromkeys(kombinaac).keys())
     komb_unique03 = list(dict.fromkeys(kombinaaw).keys())
     komb_unique04 = list(dict.fromkeys(kombinaak).keys())
-    komb_unique05 = list(dict.fromkeys(word).keys())
+    # komb_unique05 = list(dict.fromkeys(word).keys())
     komb_unique07 = list(dict.fromkeys(komb001).keys())
     komb_unique08 = list(dict.fromkeys(komb002).keys())
     komb_unique09 = list(dict.fromkeys(komb003).keys())
@@ -413,7 +413,7 @@ def least_complex(profile):
         + komb_unique02
         + komb_unique03
         + komb_unique04
-        + komb_unique05
+        # + komb_unique05
     )
 
     for i in range(1, 21):
