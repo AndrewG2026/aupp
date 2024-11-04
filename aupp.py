@@ -175,10 +175,10 @@ def least_complex(profile):
     petup = profile["pet"].title()
     companyup = profile["company"].title()
 
-    # wordsup = []
-    # wordsup = list(map(str.title, profile["words"]))
+    wordsup = []
+    wordsup = list(map(str.title, profile["words"]))
 
-    # word = profile["words"] + wordsup
+    word = profile["words"] + wordsup
 
     # reverse a name
 
@@ -342,14 +342,14 @@ def least_complex(profile):
     kombi[6] += list(komb(kombinaaw, years, "_"))
     kombi[7] = list(komb(kombinaak, years))
     kombi[7] += list(komb(kombinaak, years, "_"))
-    # kombi[8] = list(komb(word, bdss))
-    # kombi[8] += list(komb(word, bdss, "_"))
-    # kombi[9] = list(komb(word, wbdss))
-    # kombi[9] += list(komb(word, wbdss, "_"))
-    # kombi[10] = list(komb(word, kbdss))
-    # kombi[10] += list(komb(word, kbdss, "_"))
-    # kombi[11] = list(komb(word, years))
-    # kombi[11] += list(komb(word, years, "_"))
+    kombi[8] = list(komb(word, bdss))
+    kombi[8] += list(komb(word, bdss, "_"))
+    kombi[9] = list(komb(word, wbdss))
+    kombi[9] += list(komb(word, wbdss, "_"))
+    kombi[10] = list(komb(word, kbdss))
+    kombi[10] += list(komb(word, kbdss, "_"))
+    kombi[11] = list(komb(word, years))
+    kombi[11] += list(komb(word, years, "_"))
     kombi[12] = [""]
     kombi[13] = [""]
     kombi[14] = [""]
@@ -428,8 +428,8 @@ def least_complex(profile):
     )
     unique_lista = list(dict.fromkeys(uniqlist).keys())
     unique_leet = []
-    if profile["leetmode"] == "y":
-        for (
+    
+    for (
             x
         ) in (
             unique_lista
@@ -515,7 +515,42 @@ def make_leet(x):
 """
 Prints team logo, creates profile, and obtains password complexity requirements from user
 """
+def print_to_file(filename, unique_list_finished):
+    f = open(filename, "w")
+    unique_list_finished.sort()
+    f.write(os.linesep.join(unique_list_finished))
+    f.close()
+    f = open(filename, "r")
+    lines = 0
+    for line in f:
+        lines += 1
+    f.close()
+    print(
+        "[+] Saving dictionary to \033[1;31m"
+        + filename
+        + "\033[1;m, counting \033[1;31m"
+        + str(lines)
+        + " words.\033[1;m"
+    )
+    inspect = input("> Hyperspeed Print? (Y/n) : ").lower()
+    if inspect == "y":
+        try:
+            with open(filename, "r+") as wlist:
+                data = wlist.readlines()
+                for line in data:
+                    print("\033[1;32m[" + filename + "] \033[1;33m" + line)
+                    time.sleep(0000.1)
+                    os.system("clear")
+        except Exception as e:
+            print("[ERROR]: " + str(e))
+    else:
+        pass
 
+    print(
+        "[+] Now load your pistolero with \033[1;31m"
+        + filename
+        + "\033[1;m and shoot! Good luck!"
+    )
 
 def main():
     read_config("aupp.cfg")
