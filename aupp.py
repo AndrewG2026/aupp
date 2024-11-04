@@ -97,7 +97,7 @@ def create_target_profile():
 
     profile["words"] = [""]
     words1 = input(
-        "> Do you want to add some key words about the victim? Y/[N]: "
+        "> Do you want to add some key words about the victim (Keywords will only be included in Medium Complexity)? Y/[N]: "
     ).lower()
     words2 = ""
     if words1 == "y":
@@ -113,7 +113,6 @@ def create_target_profile():
     profile["randnum"] = input(
         "> Do you want to add some random numbers at the end of words? Y/[N]:"
     ).lower()
-    profile["leetmode"] = input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
     return profile
 
 def least_complex(profile):
@@ -519,7 +518,10 @@ Prints team logo, creates profile, and obtains password complexity requirements 
 
 
 def main():
+    read_config("aupp.cfg")
+
     print_sniper()
+
     target_profile = create_target_profile()
 
     password_complexity = int(
