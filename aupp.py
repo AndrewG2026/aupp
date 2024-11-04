@@ -29,6 +29,10 @@ def read_config(filename):
             "threshold": config.getint("nums", "threshold"),
             "alectourl": config.get("alecto", "alectourl"),
             "dicturl": config.get("downloader", "dicturl"),
+            "netflix-pr": config.items("netflix"),
+            "instagram-pr": config.items("instagram"),
+            "gmail-pr": config.items("gmail"),
+            "apple-pr": config.items("apple"),
         }
 
         # 1337 mode configs, well you can add more lines if you add it to the
@@ -50,13 +54,17 @@ def read_config(filename):
 
         return False
 
+
 """
 Converts the string to leet
 """
+
+
 def make_leet(x):
     for letter, leetletter in CONFIG["LEET"].items():
         x = x.replace(letter, leetletter)
     return x
+
 
 def print_sniper():
     print(
