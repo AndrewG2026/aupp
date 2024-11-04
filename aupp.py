@@ -68,7 +68,7 @@ def print_sniper():
     print(
         "          \033[1;31m_________                   _______\033[1;m"
         + 5 * " "
-        + "# \033[07mC\033[27mommon"
+        + "# \033[07mA\033[27mnderson"
     )
     print(
         "\033[1;31m_-----____/   ========================|______|\033[1;m"
@@ -87,8 +87,6 @@ def print_sniper():
     )
     print("\033[1;31m|___ ---\033[1;m")
     print("This branch was created by the students at Anderson University")
-    print(18 * " " + "[ Muris Kurgas | j0rgan@remote-exploit.org ]")
-    print(25 * " " + "[ Mebus | https://github.com/Mebus/ ]\r\n")
 
 
 def create_target_profile():
@@ -172,6 +170,10 @@ def create_target_profile():
 Prints team logo, creates profile, and obtains password complexity requirements from user
 """
 
+# def most_complex():
+#     MComplexArr = []
+
+#     max_length = 0
 
 def main():
     read_config("aupp.cfg")
@@ -192,6 +194,7 @@ def main():
                 "Enter a value that is between 1 and 3! (1 => Least Complexity, 2 => Medium Complexity, 3 => Most Complex): "
             )
         )
+
 
     # Phone number complexity : ran_phone_num = list(itertools.permutations((profile["phone_number"]+rev_name),len(profile["phone_number"])))
     if password_complexity == 1:
