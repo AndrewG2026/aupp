@@ -55,12 +55,10 @@ def read_config(filename):
         return False
 
 
-"""
-Converts the string to leet
-"""
-
-
 def make_leet(x):
+    """
+    Converts the string to leet"""
+
     for letter, leetletter in CONFIG["LEET"].items():
         x = x.replace(letter, leetletter)
     return x
