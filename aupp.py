@@ -198,9 +198,6 @@ def create_target_profile():
     profile["company"] = input("> Company name: ").lower()
     print("\r\n")
 
-
-
-
     profile["words"] = [""]
     words1 = input(
         "> Do you want to add some key words about the victim (Keywords will only be included in Medium Complexity)? Y/[N]: "
@@ -332,6 +329,7 @@ def main():
                 )
 
     "Print wordlist!"
+
 
 # unique_leet = []
 # for (x) in (ADDRETURN)):  # if you want to add more leet chars, you will need to add more lines in cupp.cfg too...
