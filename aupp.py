@@ -198,6 +198,9 @@ def create_target_profile():
     profile["company"] = input("> Company name: ").lower()
     print("\r\n")
 
+
+
+
     profile["words"] = [""]
     words1 = input(
         "> Do you want to add some key words about the victim (Keywords will only be included in Medium Complexity)? Y/[N]: "
@@ -248,9 +251,11 @@ def main():
     # Phone number complexity : ran_phone_num = list(itertools.permutations((profile["phone_number"]+rev_name),len(profile["phone_number"])))
     if password_complexity == 1:
         # call least complex function
+
         print("Least Complex")
     elif password_complexity == 2:
         # call the medium complexity function
+
         print("Medium Complex")
     else:
         print("Most complex")
@@ -328,6 +333,10 @@ def main():
 
     "Print wordlist!"
 
+# unique_leet = []
+# for (x) in (ADDRETURN)):  # if you want to add more leet chars, you will need to add more lines in cupp.cfg too...
+#         x = make_leet(x)  # convert to leet
+#         unique_leet.append(x)
 
 if __name__ == "__main__":
     main()
