@@ -4,6 +4,8 @@ import configparser
 import os
 import functools
 import sys
+import time
+import shutil
 
 CONFIG = {}
 
@@ -62,6 +64,50 @@ def make_leet(x):
     for letter, leetletter in CONFIG["LEET"].items():
         x = x.replace(letter, leetletter)
     return x
+
+
+def write_to_file(target_name, wordlist):
+    """
+    Lets user choose to append rockyou.txt or create own file
+    """
+    append_rockyou = (
+        input("Would you like to append rockyou.txt (Y/N): ").lower() == "y"
+    )
+
+    if os.path.exists(f"{target_name}.txt"):
+        os.remove(f"{target_name}.txt")
+
+    if append_rockyou:
+        if os.path.exists(f"{target_name}.txt"):
+            os.remove(f"{target_name}.txt")
+        f = open(f"{target_name}.txt", "a")
+        shutil.copy("rockyou.txt", f"{target_name}.txt")
+        print("File, target-wordlist.txt has been created, writing now")
+        for word in wordlist:
+            f.write(f"{word}\n")
+            print_loading_animation(idx + 1, wordlist_len)
+            time.sleep(0.1)
+
+    else:
+        wordlist_len = len(wordlist)
+        f = open(f"{target_name}.txt", "w")
+        print(f"File {target_name} has been created, writing now")
+        for idx, word in enumerate(wordlist):
+            f.write(f"{word}\n")
+            print_loading_animation(idx + 1, wordlist_len)
+            time.sleep(0.1)
+
+
+def print_loading_animation(current, total):
+    """
+    Displays a progress bar for the user to see progress of file creation
+    """
+    percent_complete = (current / total) * 100
+    bar_length = 20
+    block = int(round(bar_length * percent_complete / 100))
+    text = f"\rLoading: [{'#' * block + '-' * (bar_length - block)}] {percent_complete:.2f}%"
+    sys.stdout.write(text)
+    sys.stdout.flush()
 
 
 def print_sniper():
@@ -145,9 +191,6 @@ def create_target_profile():
     profile["company"] = input("> Company name: ").lower()
     print("\r\n")
 
-
-    
-
     profile["words"] = [""]
     words1 = input(
         "> Do you want to add some key words about the victim (Keywords will only be included in Medium Complexity)? Y/[N]: "
@@ -178,6 +221,7 @@ Prints team logo, creates profile, and obtains password complexity requirements 
 
 #     max_length = 0
 
+
 def main():
     read_config("aupp.cfg")
 
@@ -198,11 +242,10 @@ def main():
             )
         )
 
-
     # Phone number complexity : ran_phone_num = list(itertools.permutations((profile["phone_number"]+rev_name),len(profile["phone_number"])))
     if password_complexity == 1:
         # call least complex function
-        
+
         print("Least Complex")
     elif password_complexity == 2:
         # call the medium complexity function
@@ -216,6 +259,8 @@ def main():
     # for (x) in (ADDRETURN)):  # if you want to add more leet chars, you will need to add more lines in cupp.cfg too...
     #         x = make_leet(x)  # convert to leet
     #         unique_leet.append(x)
+    write_to_file(target_profile["name"], complete_wordlist)
+
 
 if __name__ == "__main__":
     main()
