@@ -74,9 +74,6 @@ def write_to_file(target_name, wordlist):
         input("Would you like to append rockyou.txt (Y/N): ").lower() == "y"
     )
 
-    if os.path.exists(f"{target_name}.txt"):
-        os.remove(f"{target_name}.txt")
-
     if append_rockyou:
         if os.path.exists(f"{target_name}.txt"):
             os.remove(f"{target_name}.txt")
