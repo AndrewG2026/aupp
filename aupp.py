@@ -76,6 +76,7 @@ def make_leet(x):
         x = x.replace(letter, leetletter)
     return x
 
+
 def write_to_file(target_name, wordlist, password_complextity):
     """
     Lets user choose to append rockyou.txt or create own file
@@ -139,23 +140,26 @@ def parallel_processing(complete_list, requirements):
         ]
         results = [future.result() for future in futures]
 
-    flattened_results = [item for sublist in results for item in sublist if item is not None]
+    flattened_results = [
+        item for sublist in results for item in sublist if item is not None
+    ]
     return flattened_results
 
 
 def filter_password(chunk, requirements):
     "Filters the password based on preset or custom requirements"
+
     def is_valid(item):
         if len(item) < int(requirements["length"]):
             return False
 
-        if  not requirements["uppercase"] and re.search(r'[A-Z]',item):
+        if not requirements["uppercase"] and re.search(r"[A-Z]", item):
             return False
 
-        if not requirements["lowercase"] and re.search(r"[a-z]",item):
+        if not requirements["lowercase"] and re.search(r"[a-z]", item):
             return False
 
-        if not requirements["numbers"] and re.search(r"\d",item):
+        if not requirements["numbers"] and re.search(r"\d", item):
             return False
 
         if not requirements["special_chars"] and re.search(r"[^a-zA-Z0-9\s]", item):
@@ -164,6 +168,7 @@ def filter_password(chunk, requirements):
         return True
 
     return [item for item in chunk if is_valid(item)]
+
 
 def print_sniper():
     """
@@ -269,8 +274,9 @@ def create_target_profile():
     ).lower()
     return profile
 
+
 def least_complex(profile):
-    """ Generates a wordlist from a given profile """
+    """Generates a wordlist from a given profile"""
 
     chars = CONFIG["global"]["chars"]
     years = CONFIG["global"]["years"]
@@ -588,13 +594,12 @@ def least_complex(profile):
     unique_leet = []
 
     for (
-            x
-        ) in (
-            unique_lista
-        ):  # if you want to add more leet chars, you will need to add more lines in cupp.cfg too...
-
-            x = make_leet(x)  # convert to leet
-            unique_leet.append(x)
+        x
+    ) in (
+        unique_lista
+    ):  # if you want to add more leet chars, you will need to add more lines in cupp.cfg too...
+        x = make_leet(x)  # convert to leet
+        unique_leet.append(x)
 
     unique_list = unique_lista + unique_leet
 
@@ -606,17 +611,17 @@ def least_complex(profile):
     ]
     return unique_list
 
+
 def komb(seq, start, special=""):
     for mystr in seq:
         for mystr1 in start:
             yield mystr + special + mystr1
 
+
 def concats(seq, start, stop):
     for mystr in seq:
         for num in range(start, stop):
             yield mystr + str(num)
-
-
 
 
 def main():
@@ -662,10 +667,10 @@ def main():
         )
         while is_custom > 2 or is_custom == 0:
             is_custom = int(
-            input(
-                "Number is out of range! Do you want to add your own custom password requirements (1) or use pre-set ones listed in aupp.cfg (2)? : "
+                input(
+                    "Number is out of range! Do you want to add your own custom password requirements (1) or use pre-set ones listed in aupp.cfg (2)? : "
+                )
             )
-        )
         if is_custom == 1:
             custom_password_requirements = {
                 "length": 0,
@@ -729,6 +734,6 @@ def main():
 
     write_to_file(target_profile["name"], filtered_list, password_complexity)
 
+
 if __name__ == "__main__":
     main()
-
