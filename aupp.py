@@ -156,7 +156,7 @@ def create_target_profile():
 
     profile["words"] = [""]
     words1 = input(
-        "> Do you want to add some key words about the victim (Keywords will only be included in Medium Complexity)? Y/[N]: "
+        "> Do you want to add some key words about the victim (Keywords will only be included in Medium/Most Complexity)? Y/[N]: "
     ).lower()
     words2 = ""
     if words1 == "y":
@@ -401,35 +401,35 @@ def least_complex(profile):
     kombi[6] += list(komb(kombinaaw, years, "_"))
     kombi[7] = list(komb(kombinaak, years))
     kombi[7] += list(komb(kombinaak, years, "_"))
-    kombi[8] = list(komb(word, bdss))
-    kombi[8] += list(komb(word, bdss, "_"))
-    kombi[9] = list(komb(word, wbdss))
-    kombi[9] += list(komb(word, wbdss, "_"))
-    kombi[10] = list(komb(word, kbdss))
-    kombi[10] += list(komb(word, kbdss, "_"))
-    kombi[11] = list(komb(word, years))
-    kombi[11] += list(komb(word, years, "_"))
+    # kombi[8] = list(komb(word, bdss))
+    # kombi[8] += list(komb(word, bdss, "_"))
+    # kombi[9] = list(komb(word, wbdss))
+    # kombi[9] += list(komb(word, wbdss, "_"))
+    # kombi[10] = list(komb(word, kbdss))
+    # kombi[10] += list(komb(word, kbdss, "_"))
+    # kombi[11] = list(komb(word, years))
+    # kombi[11] += list(komb(word, years, "_"))
+    kombi[8] = [""]
+    kombi[9] = [""]
+    kombi[10] = [""]
+    kombi[11] = [""]
     kombi[12] = [""]
-    kombi[13] = [""]
-    kombi[14] = [""]
-    kombi[15] = [""]
-    kombi[16] = [""]
-    kombi[21] = [""]
+    kombi[17] = [""]
     if profile["randnum"] == "y":
         # kombi[12] = list(concats(word, numfrom, numto))
         kombi[13] = list(concats(kombinaa, numfrom, numto))
         kombi[14] = list(concats(kombinaac, numfrom, numto))
         kombi[15] = list(concats(kombinaaw, numfrom, numto))
         kombi[16] = list(concats(kombinaak, numfrom, numto))
-        kombi[21] = list(concats(reverse, numfrom, numto))
-    kombi[17] = list(komb(reverse, years))
-    kombi[17] += list(komb(reverse, years, "_"))
-    kombi[18] = list(komb(rev_w, wbdss))
-    kombi[18] += list(komb(rev_w, wbdss, "_"))
-    kombi[19] = list(komb(rev_k, kbdss))
-    kombi[19] += list(komb(rev_k, kbdss, "_"))
-    kombi[20] = list(komb(rev_n, bdss))
-    kombi[20] += list(komb(rev_n, bdss, "_"))
+        kombi[17] = list(concats(reverse, numfrom, numto))
+    kombi[13] = list(komb(reverse, years))
+    kombi[13] += list(komb(reverse, years, "_"))
+    kombi[14] = list(komb(rev_w, wbdss))
+    kombi[14] += list(komb(rev_w, wbdss, "_"))
+    kombi[15] = list(komb(rev_k, kbdss))
+    kombi[15] += list(komb(rev_k, kbdss, "_"))
+    kombi[16] = list(komb(rev_n, bdss))
+    kombi[16] += list(komb(rev_n, bdss, "_"))
     komb001 = [""]
     komb002 = [""]
     komb003 = [""]
@@ -447,7 +447,7 @@ def least_complex(profile):
     print("[+] Sorting list and removing duplicates...")
 
     komb_unique = {}
-    for i in range(1, 22):
+    for i in range(1, 18):
         komb_unique[i] = list(dict.fromkeys(kombi[i]).keys())
 
     komb_unique01 = list(dict.fromkeys(kombinaa).keys())
@@ -474,7 +474,7 @@ def least_complex(profile):
         # + komb_unique05
     )
 
-    for i in range(1, 21):
+    for i in range(1, 18):
         uniqlist += komb_unique[i]
 
     uniqlist += (
