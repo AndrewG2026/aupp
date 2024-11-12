@@ -66,25 +66,34 @@ def make_leet(x):
     return x
 
 
-def write_to_file(target_name, wordlist):
+def write_to_file(target_name, wordlist, password_complextity):
     """
     Lets user choose to append rockyou.txt or create own file
     """
-    append_rockyou = (
-        input("Would you like to append rockyou.txt (Y/N): ").lower() == "y"
-    )
+    if password_complextity == 3:
+        append_rockyou = (
+            input("Would you like to append rockyou.txt (Y/N): ").lower() == "y"
+        )
 
-    if append_rockyou:
-        if os.path.exists(f"{target_name}.txt"):
-            os.remove(f"{target_name}.txt")
-        f = open(f"{target_name}.txt", "a")
-        shutil.copy("rockyou.txt", f"{target_name}.txt")
-        print("File, target-wordlist.txt has been created, writing now")
-        for word in wordlist:
-            f.write(f"{word}\n")
-            print_loading_animation(idx + 1, wordlist_len)
-            time.sleep(0.1)
+        if append_rockyou:
+            if os.path.exists(f"{target_name}.txt"):
+                os.remove(f"{target_name}.txt")
+            f = open(f"{target_name}.txt", "a")
+            shutil.copy("rockyou.txt", f"{target_name}.txt")
+            print("File, target-wordlist.txt has been created, writing now")
+            for word in wordlist:
+                f.write(f"{word}\n")
+                print_loading_animation(idx + 1, wordlist_len)
+                time.sleep(0.1)
 
+        else:
+            wordlist_len = len(wordlist)
+            f = open(f"{target_name}.txt", "w")
+            print(f"File {target_name} has been created, writing now")
+            for idx, word in enumerate(wordlist):
+                f.write(f"{word}\n")
+                print_loading_animation(idx + 1, wordlist_len)
+                time.sleep(0.1)
     else:
         wordlist_len = len(wordlist)
         f = open(f"{target_name}.txt", "w")
@@ -256,7 +265,7 @@ def main():
     # for (x) in (ADDRETURN)):  # if you want to add more leet chars, you will need to add more lines in cupp.cfg too...
     #         x = make_leet(x)  # convert to leet
     #         unique_leet.append(x)
-    write_to_file(target_profile["name"], complete_wordlist)
+    write_to_file(target_profile["name"], complete_wordlist, password_complexity)
 
 
 if __name__ == "__main__":
