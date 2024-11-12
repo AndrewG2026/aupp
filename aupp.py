@@ -95,16 +95,16 @@ def create_target_profile():
     profile["company"] = input("> Company name: ").lower()
     print("\r\n")
 
-    # profile["words"] = [""]
-    # words1 = input(
-    #     "> Do you want to add some key words about the victim (Keywords will only be included in Medium Complexity)? Y/[N]: "
-    # ).lower()
-    # words2 = ""
-    # if words1 == "y":
-    #     words2 = input(
-    #         "> Please enter the words, separated by comma. [i.e. hacker,juice,black], spaces will be removed: "
-    #     ).replace(" ", "")
-    # profile["words"] = words2.split(",")
+    profile["words"] = [""]
+    words1 = input(
+        "> Do you want to add some key words about the victim (Keywords will only be included in Medium Complexity)? Y/[N]: "
+    ).lower()
+    words2 = ""
+    if words1 == "y":
+        words2 = input(
+            "> Please enter the words, separated by comma. [i.e. hacker,juice,black], spaces will be removed: "
+        ).replace(" ", "")
+    profile["words"] = words2.split(",")
 
     profile["spechars1"] = input(
         "> Do you want to add special chars at the end of words? Y/[N]: "
@@ -342,7 +342,6 @@ def least_complex(profile):
     kombi[6] += list(komb(kombinaaw, years, "_"))
     kombi[7] = list(komb(kombinaak, years))
     kombi[7] += list(komb(kombinaak, years, "_"))
-    # renumber
     kombi[8] = list(komb(word, bdss))
     kombi[8] += list(komb(word, bdss, "_"))
     kombi[9] = list(komb(word, wbdss))
