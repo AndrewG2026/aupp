@@ -7,14 +7,18 @@ import functools
 import gzip
 import os
 import sys
+import multiprocessing
+import math
+from concurrent.futures import ProcessPoolExecutor
 import time
 import shutil
 import urllib.error
 import urllib.parse
 import urllib.request
-
+from functools import reduce
 
 CONFIG = {}
+CORE_COUNT = multiprocessing.cpu_count()
 
 
 def read_config(filename):
@@ -38,10 +42,10 @@ def read_config(filename):
             "threshold": config.getint("nums", "threshold"),
             "alectourl": config.get("alecto", "alectourl"),
             "dicturl": config.get("downloader", "dicturl"),
-            "netflix-pr": config.items("netflix"),
-            "instagram-pr": config.items("instagram"),
-            "gmail-pr": config.items("gmail"),
-            "apple-pr": config.items("apple"),
+            "netflix-pr": dict(config.items("netflix")),
+            "instagram-pr": dict(config.items("instagram")),
+            "gmail-pr": dict(config.items("gmail")),
+            "apple-pr": dict(config.items("apple")),
         }
 
         # 1337 mode configs, well you can add more lines if you add it to the
@@ -122,7 +126,49 @@ def print_loading_animation(current, total):
     sys.stdout.flush()
 
 
+def parallel_processing(complete_list, requirements):
+    "Will use the filter requirements to go through the passwords"
+    chunk_size = math.ceil(len(complete_list) / CORE_COUNT)
+    chunks = [
+        complete_list[i * chunk_size : (i + 1) * chunk_size] for i in range(CORE_COUNT)
+    ]
+
+    with ProcessPoolExecutor() as executor:
+        futures = [
+            executor.submit(filter_password, chunk, requirements) for chunk in chunks
+        ]
+        results = [future.result() for future in futures]
+
+    flattened_results = [item for sublist in results for item in sublist if item is not None]
+    return flattened_results
+
+
+def filter_password(chunk, requirements):
+    "Filters the password based on preset or custom requirements"
+    def is_valid(item):
+        if len(item) < int(requirements["length"]):
+            return False
+
+        if  not requirements["uppercase"] and re.search(r'[A-Z]',item):
+            return False
+
+        if not requirements["lowercase"] and re.search(r"[a-z]",item):
+            return False
+
+        if not requirements["numbers"] and re.search(r"\d",item):
+            return False
+
+        if not requirements["special_chars"] and re.search(r"[^a-zA-Z0-9\s]", item):
+            return False
+
+        return True
+
+    return [item for item in chunk if is_valid(item)]
+
 def print_sniper():
+    """
+    Prints team logo, creates profile, and obtains password complexity requirements from user
+    """
     print(
         "          \033[1;31m_________                   _______\033[1;m"
         + 5 * " "
@@ -571,6 +617,8 @@ def concats(seq, start, stop):
             yield mystr + str(num)
 
 
+
+
 def main():
     read_config("aupp.cfg")
 
@@ -595,6 +643,7 @@ def main():
     if password_complexity == 1:
         # call least complex function
         complete_wordlist = least_complex(target_profile)
+
     elif password_complexity == 2:
         # call the medium complexity function
         print("Medium Complex")
@@ -602,7 +651,83 @@ def main():
         print("Most complex")
         # call the most complex function
 
-    write_to_file(target_profile["name"], complete_wordlist, password_complexity)
+    # Will take the complete list and filter it
+    will_filter = str(input("Do you want to filter for password requirements? (Y/N): "))
+
+    if will_filter.lower() == "y":
+        is_custom = int(
+            input(
+                "Do you want to add your own custom password requirements (1) or use pre-set ones listed in aupp.cfg (2)? : "
+            )
+        )
+        while is_custom > 2 or is_custom == 0:
+            is_custom = int(
+            input(
+                "Number is out of range! Do you want to add your own custom password requirements (1) or use pre-set ones listed in aupp.cfg (2)? : "
+            )
+        )
+        if is_custom == 1:
+            custom_password_requirements = {
+                "length": 0,
+                "uppercase": True,
+                "lowercase": True,
+                "numbers": True,
+                "special_chars": True,
+            }
+            custom_password_requirements["length"] = int(
+                input("What is the minimum length of the password: ")
+            )
+            custom_password_requirements["uppercase"] = (
+                str(input("Are there any uppercase characters (Y/N): ")).lower() == "y"
+            )
+            custom_password_requirements["lowercase"] = (
+                str(input("Are there any lowercase characters (Y/N): ")).lower() == "y"
+            )
+            custom_password_requirements["numbers"] = (
+                str(input("Are there any numbers (Y/N): ")).lower() == "y"
+            )
+            custom_password_requirements["special_chars"] = (
+                str(input("Are there any special characters: (Y/N): ")).lower() == "y"
+            )
+
+            # Using this string filter out each string in the wordlist
+            filtered_list = parallel_processing(
+                complete_wordlist, custom_password_requirements
+            )
+            "Prompt user to create own requirements based on aupp.cfg"
+        else:
+            "Prompt user to pick which of the 4 preset password requirements to pick from and use that as reference"
+            preset_password_requirements = int(
+                input(
+                    "Which of the preset password requirements would you like to select (Netflix=1, Instagram=2, gmail=3, apple=4): "
+                )
+            )
+
+            while preset_password_requirements == 0 or preset_password_requirements > 4:
+                preset_password_requirements = int(
+                    input(
+                        "Number is out of range please select (Netflix=1, Instagram=2, gmail=3, apple=4): "
+                    )
+                )
+
+            if preset_password_requirements == 1:
+                filtered_list = parallel_processing(
+                    complete_wordlist, CONFIG["global"]["netflix-pr"]
+                )
+            elif preset_password_requirements == 2:
+                filtered_list = parallel_processing(
+                    complete_wordlist, CONFIG["global"]["instagram-pr"]
+                )
+            elif preset_password_requirements == 3:
+                filtered_list = parallel_processing(
+                    complete_wordlist, CONFIG["global"]["gmail-pr"]
+                )
+            else:
+                filtered_list = parallel_processing(
+                    complete_wordlist, CONFIG["global"["apple-pr"]]
+                )
+
+    write_to_file(target_profile["name"], filtered_list, password_complexity)
 
 if __name__ == "__main__":
     main()
