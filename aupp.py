@@ -1,5 +1,5 @@
 from itertools import permutations
-import re 
+import re
 import argparse
 import configparser
 import csv
@@ -7,10 +7,12 @@ import functools
 import gzip
 import os
 import sys
+import time
+import shutil
 import urllib.error
 import urllib.parse
 import urllib.request
-import time
+
 
 CONFIG = {}
 
@@ -69,6 +71,56 @@ def make_leet(x):
     for letter, leetletter in CONFIG["LEET"].items():
         x = x.replace(letter, leetletter)
     return x
+
+def write_to_file(target_name, wordlist, password_complextity):
+    """
+    Lets user choose to append rockyou.txt or create own file
+    """
+    if password_complextity == 3:
+        append_rockyou = (
+            input("Would you like to append rockyou.txt (Y/N): ").lower() == "y"
+        )
+
+        if append_rockyou:
+            if os.path.exists(f"{target_name}.txt"):
+                os.remove(f"{target_name}.txt")
+            f = open(f"{target_name}.txt", "a")
+            shutil.copy("rockyou.txt", f"{target_name}.txt")
+            print("File, target-wordlist.txt has been created, writing now")
+            for word in wordlist:
+                f.write(f"{word}\n")
+                print_loading_animation(idx + 1, wordlist_len)
+                time.sleep(0.1)
+
+        else:
+            wordlist_len = len(wordlist)
+            f = open(f"{target_name}.txt", "w")
+            print(f"File {target_name} has been created, writing now")
+            for idx, word in enumerate(wordlist):
+                f.write(f"{word}\n")
+                print_loading_animation(idx + 1, wordlist_len)
+                time.sleep(0.1)
+    else:
+        wordlist_len = len(wordlist)
+        f = open(f"{target_name}.txt", "w")
+        print(f"File {target_name} has been created, writing now")
+        for idx, word in enumerate(wordlist):
+            f.write(f"{word}\n")
+            print_loading_animation(idx + 1, wordlist_len)
+            time.sleep(0.1)
+
+
+def print_loading_animation(current, total):
+    """
+    Displays a progress bar for the user to see progress of file creation
+    """
+    percent_complete = (current / total) * 100
+    bar_length = 20
+    block = int(round(bar_length * percent_complete / 100))
+    text = f"\rLoading: [{'#' * block + '-' * (bar_length - block)}] {percent_complete:.2f}%"
+    sys.stdout.write(text)
+    sys.stdout.flush()
+
 
 def print_sniper():
     print(
@@ -150,9 +202,6 @@ def create_target_profile():
     profile["pet"] = input("> Pet's name: ").lower()
     profile["company"] = input("> Company name: ").lower()
     print("\r\n")
-
-
-    
 
     profile["words"] = [""]
     words1 = input(
@@ -401,6 +450,7 @@ def least_complex(profile):
     kombi[6] += list(komb(kombinaaw, years, "_"))
     kombi[7] = list(komb(kombinaak, years))
     kombi[7] += list(komb(kombinaak, years, "_"))
+    "ADD TO MEDIUM COMPLEXITY"
     # kombi[8] = list(komb(word, bdss))
     # kombi[8] += list(komb(word, bdss, "_"))
     # kombi[9] = list(komb(word, wbdss))
@@ -416,6 +466,7 @@ def least_complex(profile):
     kombi[12] = [""]
     kombi[17] = [""]
     if profile["randnum"] == "y":
+        "ADD TO MEDIUM COMPLEXITY"
         # kombi[12] = list(concats(word, numfrom, numto))
         kombi[13] = list(concats(kombinaa, numfrom, numto))
         kombi[14] = list(concats(kombinaac, numfrom, numto))
@@ -441,6 +492,7 @@ def least_complex(profile):
         komb002 = list(komb(kombinaac, profile["spechars"]))
         komb003 = list(komb(kombinaaw, profile["spechars"]))
         komb004 = list(komb(kombinaak, profile["spechars"]))
+        "ADD TO MEDIUM COMPLEXITY"
         # komb005 = list(komb(word, profile["spechars"]))
         komb006 = list(komb(reverse, profile["spechars"]))
 
@@ -454,6 +506,7 @@ def least_complex(profile):
     komb_unique02 = list(dict.fromkeys(kombinaac).keys())
     komb_unique03 = list(dict.fromkeys(kombinaaw).keys())
     komb_unique04 = list(dict.fromkeys(kombinaak).keys())
+    "ADD TO MEDIUM COMPLEXITY"
     # komb_unique05 = list(dict.fromkeys(word).keys())
     komb_unique07 = list(dict.fromkeys(komb001).keys())
     komb_unique08 = list(dict.fromkeys(komb002).keys())
@@ -487,7 +540,7 @@ def least_complex(profile):
     )
     unique_lista = list(dict.fromkeys(uniqlist).keys())
     unique_leet = []
-    
+
     for (
             x
         ) in (
@@ -505,8 +558,7 @@ def least_complex(profile):
         for x in unique_list
         if len(x) < CONFIG["global"]["wcto"] and len(x) > CONFIG["global"]["wcfrom"]
     ]
-
-    print_to_file(profile["name"] + ".txt", unique_list_finished)
+    return unique_list
 
 def komb(seq, start, special=""):
     for mystr in seq:
@@ -518,26 +570,6 @@ def concats(seq, start, stop):
         for num in range(start, stop):
             yield mystr + str(num)
 
-"""
-Prints team logo, creates profile, and obtains password complexity requirements from user
-"""
-def print_to_file(filename, unique_list_finished):
-    f = open(filename, "w")
-    unique_list_finished.sort()
-    f.write(os.linesep.join(unique_list_finished))
-    f.close()
-    f = open(filename, "r")
-    lines = 0
-    for line in f:
-        lines += 1
-    f.close()
-    print(
-        "[+] Saving dictionary to \033[1;31m"
-        + filename
-        + "\033[1;m, counting \033[1;31m"
-        + str(lines)
-        + " words.\033[1;m"
-    )
 
 def main():
     read_config("aupp.cfg")
@@ -559,19 +591,18 @@ def main():
             )
         )
 
-
     # Phone number complexity : ran_phone_num = list(itertools.permutations((profile["phone_number"]+rev_name),len(profile["phone_number"])))
     if password_complexity == 1:
         # call least complex function
-        least_complex(target_profile)
+        complete_wordlist = least_complex(target_profile)
     elif password_complexity == 2:
         # call the medium complexity function
-
         print("Medium Complex")
     else:
         print("Most complex")
         # call the most complex function
 
+    write_to_file(target_profile["name"], complete_wordlist, password_complexity)
 
 if __name__ == "__main__":
     main()
