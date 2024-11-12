@@ -12,11 +12,69 @@ import urllib.parse
 import urllib.request
 import time
 
+CONFIG = {}
+
+
+def read_config(filename):
+    """Read the given configuration file and update global variables to reflect
+    changes (CONFIG)."""
+
+    if os.path.isfile(filename):
+        # global CONFIG
+
+        # Reading configuration file
+        config = configparser.ConfigParser()
+        config.read(filename)
+
+        CONFIG["global"] = {
+            "years": config.get("years", "years").split(","),
+            "chars": config.get("specialchars", "chars").split(","),
+            "numfrom": config.getint("nums", "from"),
+            "numto": config.getint("nums", "to"),
+            "wcfrom": config.getint("nums", "wcfrom"),
+            "wcto": config.getint("nums", "wcto"),
+            "threshold": config.getint("nums", "threshold"),
+            "alectourl": config.get("alecto", "alectourl"),
+            "dicturl": config.get("downloader", "dicturl"),
+            "netflix-pr": config.items("netflix"),
+            "instagram-pr": config.items("instagram"),
+            "gmail-pr": config.items("gmail"),
+            "apple-pr": config.items("apple"),
+        }
+
+        # 1337 mode configs, well you can add more lines if you add it to the
+        # config file too.
+        leet = functools.partial(config.get, "leet")
+        leetc = {}
+        letters = {"a", "i", "e", "t", "o", "s", "g", "z"}
+
+        for letter in letters:
+            leetc[letter] = config.get("leet", letter)
+
+        CONFIG["LEET"] = leetc
+
+        return True
+
+    else:
+        print("Configuration file " + filename + " not found!")
+        sys.exit("Exiting.")
+
+        return False
+
+
+def make_leet(x):
+    """
+    Converts the string to leet"""
+
+    for letter, leetletter in CONFIG["LEET"].items():
+        x = x.replace(letter, leetletter)
+    return x
+
 def print_sniper():
     print(
         "          \033[1;31m_________                   _______\033[1;m"
         + 5 * " "
-        + "# \033[07mC\033[27mommon"
+        + "# \033[07mA\033[27mnderson"
     )
     print(
         "\033[1;31m_-----____/   ========================|______|\033[1;m"
@@ -35,8 +93,6 @@ def print_sniper():
     )
     print("\033[1;31m|___ ---\033[1;m")
     print("This branch was created by the students at Anderson University")
-    print(18 * " " + "[ Muris Kurgas | j0rgan@remote-exploit.org ]")
-    print(25 * " " + "[ Mebus | https://github.com/Mebus/ ]\r\n")
 
 
 def create_target_profile():
@@ -94,6 +150,9 @@ def create_target_profile():
     profile["pet"] = input("> Pet's name: ").lower()
     profile["company"] = input("> Company name: ").lower()
     print("\r\n")
+
+
+    
 
     profile["words"] = [""]
     words1 = input(
@@ -448,53 +507,6 @@ def least_complex(profile):
     ]
 
     print_to_file(profile["name"] + ".txt", unique_list_finished)
-    
-    
-CONFIG = {}
-
-
-def read_config(filename):
-    """Read the given configuration file and update global variables to reflect
-    changes (CONFIG)."""
-
-    if os.path.isfile(filename):
-
-        # global CONFIG
-
-        # Reading configuration file
-        config = configparser.ConfigParser()
-        config.read(filename)
-
-        CONFIG["global"] = {
-            "years": config.get("years", "years").split(","),
-            "chars": config.get("specialchars", "chars").split(","),
-            "numfrom": config.getint("nums", "from"),
-            "numto": config.getint("nums", "to"),
-            "wcfrom": config.getint("nums", "wcfrom"),
-            "wcto": config.getint("nums", "wcto"),
-            "threshold": config.getint("nums", "threshold"),
-            "alectourl": config.get("alecto", "alectourl"),
-            "dicturl": config.get("downloader", "dicturl"),
-        }
-
-        # 1337 mode configs, well you can add more lines if you add it to the
-        # config file too.
-        leet = functools.partial(config.get, "leet")
-        leetc = {}
-        letters = {"a", "i", "e", "t", "o", "s", "g", "z"}
-
-        for letter in letters:
-            leetc[letter] = config.get("leet", letter)
-
-        CONFIG["LEET"] = leetc
-
-        return True
-
-    else:
-        print("Configuration file " + filename + " not found!")
-        sys.exit("Exiting.")
-
-        return False
 
 def komb(seq, start, special=""):
     for mystr in seq:
@@ -505,12 +517,6 @@ def concats(seq, start, stop):
     for mystr in seq:
         for num in range(start, stop):
             yield mystr + str(num)
-
-def make_leet(x):
-    """convert string to leet"""
-    for letter, leetletter in CONFIG["LEET"].items():
-        x = x.replace(letter, leetletter)
-    return x
 
 """
 Prints team logo, creates profile, and obtains password complexity requirements from user
@@ -533,12 +539,6 @@ def print_to_file(filename, unique_list_finished):
         + " words.\033[1;m"
     )
 
-    print(
-        "[+] Now load your pistolero with \033[1;31m"
-        + filename
-        + "\033[1;m and shoot! Good luck!"
-    )
-
 def main():
     read_config("aupp.cfg")
 
@@ -559,12 +559,14 @@ def main():
             )
         )
 
+
     # Phone number complexity : ran_phone_num = list(itertools.permutations((profile["phone_number"]+rev_name),len(profile["phone_number"])))
     if password_complexity == 1:
         # call least complex function
         least_complex(target_profile)
     elif password_complexity == 2:
         # call the medium complexity function
+
         print("Medium Complex")
     else:
         print("Most complex")
