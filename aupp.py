@@ -7,7 +7,6 @@ import functools
 import gzip
 import os
 import sys
-import threading
 import multiprocessing
 import math
 from concurrent.futures import ProcessPoolExecutor
@@ -69,30 +68,6 @@ def read_config(filename):
 
         return False
 
-
-def transform_word(word):
-    return {
-        "capitalize": word.capitalize(),
-        "title": word.title(),
-        "swapcase": word.swapcase(),
-        "lower": word.lower(),
-        "upper": word.upper(),
-    }
-
-
-def transform_words(words):
-    return {
-        word: {
-            method: getattr(transform_word(word), method)
-            for method in ["capitalize", "title", "swapcase", "lower", "upper"]
-        }
-        for word in words
-    }
-
-
-"""
-Converts the string to leet
-"""
 
 def make_leet(x):
     """
@@ -536,6 +511,15 @@ def least_complex(profile):
     kombi[6] += list(komb(kombinaaw, years, "_"))
     kombi[7] = list(komb(kombinaak, years))
     kombi[7] += list(komb(kombinaak, years, "_"))
+    "ADD TO MEDIUM COMPLEXITY"
+    # kombi[8] = list(komb(word, bdss))
+    # kombi[8] += list(komb(word, bdss, "_"))
+    # kombi[9] = list(komb(word, wbdss))
+    # kombi[9] += list(komb(word, wbdss, "_"))
+    # kombi[10] = list(komb(word, kbdss))
+    # kombi[10] += list(komb(word, kbdss, "_"))
+    # kombi[11] = list(komb(word, years))
+    # kombi[11] += list(komb(word, years, "_"))
     kombi[8] = [""]
     kombi[9] = [""]
     kombi[10] = [""]
@@ -544,6 +528,7 @@ def least_complex(profile):
     kombi[17] = [""]
     if profile["randnum"] == "y":
         "ADD TO MEDIUM COMPLEXITY"
+        # kombi[12] = list(concats(word, numfrom, numto))
         kombi[13] = list(concats(kombinaa, numfrom, numto))
         kombi[14] = list(concats(kombinaac, numfrom, numto))
         kombi[15] = list(concats(kombinaaw, numfrom, numto))
@@ -568,6 +553,8 @@ def least_complex(profile):
         komb002 = list(komb(kombinaac, profile["spechars"]))
         komb003 = list(komb(kombinaaw, profile["spechars"]))
         komb004 = list(komb(kombinaak, profile["spechars"]))
+        "ADD TO MEDIUM COMPLEXITY"
+        # komb005 = list(komb(word, profile["spechars"]))
         komb006 = list(komb(reverse, profile["spechars"]))
 
     print("[+] Sorting list and removing duplicates...")
@@ -580,6 +567,8 @@ def least_complex(profile):
     komb_unique02 = list(dict.fromkeys(kombinaac).keys())
     komb_unique03 = list(dict.fromkeys(kombinaaw).keys())
     komb_unique04 = list(dict.fromkeys(kombinaak).keys())
+    "ADD TO MEDIUM COMPLEXITY"
+    # komb_unique05 = list(dict.fromkeys(word).keys())
     komb_unique07 = list(dict.fromkeys(komb001).keys())
     komb_unique08 = list(dict.fromkeys(komb002).keys())
     komb_unique09 = list(dict.fromkeys(komb003).keys())
@@ -596,6 +585,7 @@ def least_complex(profile):
         + komb_unique02
         + komb_unique03
         + komb_unique04
+        # + komb_unique05
     )
 
     for i in range(1, 18):
@@ -643,156 +633,6 @@ def concats(seq, start, stop):
             yield mystr + str(num)
 
 
-"""
-Provides additional complextiy to the wordlist utilizing the target's keywords
-"""
-
-
-def medium_complexity(profile):
-
-    least_list = least_complex(profile)
-
-    chars = CONFIG["global"]["chars"]
-    years = CONFIG["global"]["years"]
-    numfrom = CONFIG["global"]["numfrom"]
-    numto = CONFIG["global"]["numto"]
-
-    profile["spechars"] = []
-
-    if profile["spechars1"] == "y":
-        for spec1 in chars:
-            profile["spechars"].append(spec1)
-            for spec2 in chars:
-                profile["spechars"].append(spec1 + spec2)
-                for spec3 in chars:
-                    profile["spechars"].append(spec1 + spec2 + spec3)
-
-    birthdate_yy = profile["birthdate"][-2:]
-    birthdate_yyy = profile["birthdate"][-3:]
-    birthdate_yyyy = profile["birthdate"][-4:]
-    birthdate_xd = profile["birthdate"][1:2]
-    birthdate_xm = profile["birthdate"][3:4]
-    birthdate_dd = profile["birthdate"][:2]
-    birthdate_mm = profile["birthdate"][2:4]
-
-    wifeb_yy = profile["wifeb"][-2:]
-    wifeb_yyy = profile["wifeb"][-3:]
-    wifeb_yyyy = profile["wifeb"][-4:]
-    wifeb_xd = profile["wifeb"][1:2]
-    wifeb_xm = profile["wifeb"][3:4]
-    wifeb_dd = profile["wifeb"][:2]
-    wifeb_mm = profile["wifeb"][2:4]
-
-    kidb_yy = profile["kidb"][-2:]
-    kidb_yyy = profile["kidb"][-3:]
-    kidb_yyyy = profile["kidb"][-4:]
-    kidb_xd = profile["kidb"][1:2]
-    kidb_xm = profile["kidb"][3:4]
-    kidb_dd = profile["kidb"][:2]
-    kidb_mm = profile["kidb"][2:4]
-
-    wordsup = []
-    wordsup = list(map(str.title, profile["words"]))
-
-    word = profile["words"] + wordsup
-
-    bds = [
-        birthdate_yy,
-        birthdate_yyy,
-        birthdate_yyyy,
-        birthdate_xd,
-        birthdate_xm,
-        birthdate_dd,
-        birthdate_mm,
-    ]
-
-    bdss = []
-
-    for bds1 in bds:
-        bdss.append(bds1)
-        for bds2 in bds:
-            if bds.index(bds1) != bds.index(bds2):
-                bdss.append(bds1 + bds2)
-                for bds3 in bds:
-                    if (
-                        bds.index(bds1) != bds.index(bds2)
-                        and bds.index(bds2) != bds.index(bds3)
-                        and bds.index(bds1) != bds.index(bds3)
-                    ):
-                        bdss.append(bds1 + bds2 + bds3)
-
-    wbds = [wifeb_yy, wifeb_yyy, wifeb_yyyy, wifeb_xd, wifeb_xm, wifeb_dd, wifeb_mm]
-
-    wbdss = []
-
-    for wbds1 in wbds:
-        wbdss.append(wbds1)
-        for wbds2 in wbds:
-            if wbds.index(wbds1) != wbds.index(wbds2):
-                wbdss.append(wbds1 + wbds2)
-                for wbds3 in wbds:
-                    if (
-                        wbds.index(wbds1) != wbds.index(wbds2)
-                        and wbds.index(wbds2) != wbds.index(wbds3)
-                        and wbds.index(wbds1) != wbds.index(wbds3)
-                    ):
-                        wbdss.append(wbds1 + wbds2 + wbds3)
-
-    kbds = [kidb_yy, kidb_yyy, kidb_yyyy, kidb_xd, kidb_xm, kidb_dd, kidb_mm]
-
-    kbdss = []
-
-    for kbds1 in kbds:
-        kbdss.append(kbds1)
-        for kbds2 in kbds:
-            if kbds.index(kbds1) != kbds.index(kbds2):
-                kbdss.append(kbds1 + kbds2)
-                for kbds3 in kbds:
-                    if (
-                        kbds.index(kbds1) != kbds.index(kbds2)
-                        and kbds.index(kbds2) != kbds.index(kbds3)
-                        and kbds.index(kbds1) != kbds.index(kbds3)
-                    ):
-                        kbdss.append(kbds1 + kbds2 + kbds3)
-
-    kombi = {}
-    "ADD TO MEDIUM COMPLEXITY"
-    kombi[1] = list(komb(word, bdss))
-    kombi[1] += list(komb(word, bdss, "_"))
-    kombi[2] = list(komb(word, wbdss))
-    kombi[2] += list(komb(word, wbdss, "_"))
-    kombi[3] = list(komb(word, kbdss))
-    kombi[3] += list(komb(word, kbdss, "_"))
-    kombi[4] = list(komb(word, years))
-    kombi[4] += list(komb(word, years, "_"))
-    kombi[5] = [""]
-    if profile["randnum"] == "y":
-        "ADD TO MEDIUM COMPLEXITY"
-        kombi[5] = list(concats(word, numfrom, numto))
-    komb001 = [""]
-    if len(profile["spechars"]) > 0:
-        "ADD TO MEDIUM COMPLEXITY"
-        komb001 = list(komb(word, profile["spechars"]))
-
-    komb_unique = []
-    for i in range(1, 6):
-        komb_unique += list(dict.fromkeys(kombi[i]).keys())
-
-    least_list = least_list + komb_unique + komb001
-
-    new_least_list = []
-    for x in least_list:
-        x = make_leet(x)
-        new_least_list.append(x)
-
-    return list(set(least_list))
-
-
-"""
-Prints team logo, creates profile, and obtains password complexity requirements from user
-"""
-
-
 def main():
     read_config("aupp.cfg")
 
@@ -819,7 +659,8 @@ def main():
         complete_wordlist = least_complex(target_profile)
 
     elif password_complexity == 2:
-        complete_wordlist = medium_complexity(target_profile)
+        # call the medium complexity function
+        print("Medium Complex")
     else:
         print("Most complex")
         # call the most complex function
@@ -899,7 +740,7 @@ def main():
                 filtered_list = parallel_processing(
                     complete_wordlist, CONFIG["global"]["apple-pr"]
                 )
-    print("Youve created ",len(filtered_list)," passwords!!")
+
     write_to_file(target_profile["name"], filtered_list, password_complexity)
 
 
