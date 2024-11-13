@@ -773,28 +773,18 @@ def medium_complexity(profile):
         "ADD TO MEDIUM COMPLEXITY"
         komb001 = list(komb(word, profile["spechars"]))
 
-    print("[+] Sorting list and removing duplicates...")
+    komb_unique = []
+    for i in range(1, 6):
+        komb_unique += list(dict.fromkeys(kombi[i]).keys())
 
-    komb_unique = {}
-    for i in range(1, 2):
-        komb_unique[i] = list(dict.fromkeys(kombi[i]).keys())
+    least_list = least_list + komb_unique + komb001
 
-    "ADD TO MEDIUM COMPLEXITY"
-    komb_unique01 = list(dict.fromkeys(word).keys())
-
-
-    new_list = least_list + komb_unique
-
-    # Take the key words and perform uppercase, lowercase, title case, capitalize case, and swapcase
-
-    transformed_words = transform_words(target_profile["words"])
-
-
-    for x in med_comp_list:
+    new_least_list = []
+    for x in least_list:
         x = make_leet(x)
-        med_comp_list.append(x)
+        new_least_list.append(x)
 
-    return med_comp_list
+    return list(set(least_list))
 
 
 """
@@ -908,7 +898,7 @@ def main():
                 filtered_list = parallel_processing(
                     complete_wordlist, CONFIG["global"["apple-pr"]]
                 )
-
+    print("Youve created ",len(filtered_list)," passwords!!")
     write_to_file(target_profile["name"], filtered_list, password_complexity)
 
 if __name__ == "__main__":
