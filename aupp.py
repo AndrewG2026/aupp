@@ -779,11 +779,14 @@ def medium_complexity(profile):
         komb_unique += list(dict.fromkeys(kombi[i]).keys())
 
     least_list = least_list + komb_unique + komb001
+    other_list = komb001 + komb_unique
 
-    new_least_list = []
-    for x in least_list:
+    new_other_list = []
+    for x in other_list:
         x = make_leet(x)
-        new_least_list.append(x)
+        new_other_list.append(x)
+
+    least_list += new_other_list
 
     return list(set(least_list))
 
