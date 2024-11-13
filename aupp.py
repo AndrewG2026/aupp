@@ -77,9 +77,11 @@ def make_leet(x):
         x = x.replace(letter, leetletter)
     return x
 
+
 def unzip_rockyou():
-    with zipfile.ZipFile('rockyou.zip', 'r') as zip_ref:
-        zip_ref.extractall('')
+    with zipfile.ZipFile("rockyou.zip", "r") as zip_ref:
+        zip_ref.extractall("")
+
 
 def write_to_file(target_name, wordlist, password_complextity):
     """
@@ -743,6 +745,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # main()
-    read_config('aupp.cfg')
-    write_to_file("Bill",["Words"],1)
+    main()
