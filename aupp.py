@@ -16,6 +16,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from functools import reduce
+import zipfile
 
 CONFIG = {}
 CORE_COUNT = multiprocessing.cpu_count()
@@ -76,11 +77,15 @@ def make_leet(x):
         x = x.replace(letter, leetletter)
     return x
 
+def unzip_rockyou():
+    with zipfile.ZipFile('rockyou.zip', 'r') as zip_ref:
+        zip_ref.extractall('')
 
 def write_to_file(target_name, wordlist, password_complextity):
     """
     Lets user choose to append rockyou.txt or create own file
     """
+    unzip_rockyou()
     if password_complextity == 3:
         append_rockyou = (
             input("Would you like to append rockyou.txt (Y/N): ").lower() == "y"
@@ -729,11 +734,13 @@ def main():
                 )
             else:
                 filtered_list = parallel_processing(
-                    complete_wordlist, CONFIG["global"["apple-pr"]]
+                    complete_wordlist, CONFIG["global"]["apple-pr"]
                 )
 
     write_to_file(target_profile["name"], filtered_list, password_complexity)
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    read_config('aupp.cfg')
+    write_to_file("Bill",["Words"],1)
