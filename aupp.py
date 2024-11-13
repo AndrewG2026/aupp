@@ -85,7 +85,6 @@ def write_to_file(target_name, wordlist, password_complextity):
     """
     Lets user choose to append rockyou.txt or create own file
     """
-    unzip_rockyou()
     if password_complextity == 3:
         append_rockyou = (
             input("Would you like to append rockyou.txt (Y/N): ").lower() == "y"
@@ -94,6 +93,9 @@ def write_to_file(target_name, wordlist, password_complextity):
         if append_rockyou:
             if os.path.exists(f"{target_name}.txt"):
                 os.remove(f"{target_name}.txt")
+            if os.path.exists("rockyou.txt"):
+                os.remove("rockyou.txt")
+            unzip_rockyou()
             f = open(f"{target_name}.txt", "a")
             shutil.copy("rockyou.txt", f"{target_name}.txt")
             print("File, target-wordlist.txt has been created, writing now")
