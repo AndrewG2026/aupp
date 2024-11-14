@@ -1,22 +1,13 @@
-from itertools import permutations
 import re
-import argparse
 import configparser
-import csv
 import functools
-import gzip
 import os
 import sys
-import threading
 import multiprocessing
 import math
 from concurrent.futures import ProcessPoolExecutor
 import time
 import shutil
-import urllib.error
-import urllib.parse
-import urllib.request
-from functools import reduce
 import zipfile
 
 CONFIG = {}
@@ -28,9 +19,6 @@ def read_config(filename):
     changes (CONFIG)."""
 
     if os.path.isfile(filename):
-        # global CONFIG
-
-        # Reading configuration file
         config = configparser.ConfigParser()
         config.read(filename)
 
@@ -50,8 +38,6 @@ def read_config(filename):
             "apple-pr": dict(config.items("apple")),
         }
 
-        # 1337 mode configs, well you can add more lines if you add it to the
-        # config file too.
         leet = functools.partial(config.get, "leet")
         leetc = {}
         letters = {"a", "i", "e", "t", "o", "s", "g", "z"}
@@ -90,10 +76,6 @@ def transform_words(words):
     }
 
 
-"""
-Converts the string to leet
-"""
-
 def make_leet(x):
     """
     Converts the string to leet"""
@@ -112,35 +94,25 @@ def write_to_file(target_name, wordlist, password_complextity):
     """
     Lets user choose to append rockyou.txt or create own file
     """
-    if password_complextity == 3:
-        append_rockyou = (
-            input("Would you like to append rockyou.txt (Y/N): ").lower() == "y"
-        )
+    append_rockyou = (
+        input("Would you like to append rockyou.txt (Y/N): ").lower() == "y"
+    )
+    wordlist_len = len(wordlist)
+    if append_rockyou:
+        if os.path.exists(f"{target_name}.txt"):
+            os.remove(f"{target_name}.txt")
+        if os.path.exists("rockyou.txt"):
+            os.remove("rockyou.txt")
+        unzip_rockyou()
+        f = open(f"{target_name}.txt", "a")
+        shutil.copy("rockyou.txt", f"{target_name}.txt")
+        print(f"File, {target_name}.txt has been created, writing now")
+        for idx, word in enumerate(wordlist):
+            f.write(f"{word}\n")
+            print_loading_animation(idx + 1, wordlist_len)
+            time.sleep(0.1)
 
-        if append_rockyou:
-            if os.path.exists(f"{target_name}.txt"):
-                os.remove(f"{target_name}.txt")
-            if os.path.exists("rockyou.txt"):
-                os.remove("rockyou.txt")
-            unzip_rockyou()
-            f = open(f"{target_name}.txt", "a")
-            shutil.copy("rockyou.txt", f"{target_name}.txt")
-            print("File, target-wordlist.txt has been created, writing now")
-            for word in wordlist:
-                f.write(f"{word}\n")
-                print_loading_animation(idx + 1, wordlist_len)
-                time.sleep(0.1)
-
-        else:
-            wordlist_len = len(wordlist)
-            f = open(f"{target_name}.txt", "w")
-            print(f"File {target_name} has been created, writing now")
-            for idx, word in enumerate(wordlist):
-                f.write(f"{word}\n")
-                print_loading_animation(idx + 1, wordlist_len)
-                time.sleep(0.1)
     else:
-        wordlist_len = len(wordlist)
         f = open(f"{target_name}.txt", "w")
         print(f"File {target_name} has been created, writing now")
         for idx, word in enumerate(wordlist):
@@ -239,8 +211,6 @@ def create_target_profile():
     print("\r\n[+] Insert the information about the victim to make a dictionary")
     print("[+] If you don't know all the info, just hit enter when asked! ;)\r\n")
 
-    # We need some information first!
-
     profile = {}
 
     name = input("> First Name: ").lower()
@@ -329,10 +299,6 @@ def least_complex(profile):
 
     print("\r\n[+] Now making a dictionary...")
 
-    # Now me must do some string modifications...
-
-    # Birthdays first
-
     birthdate_yy = profile["birthdate"][-2:]
     birthdate_yyy = profile["birthdate"][-3:]
     birthdate_yyyy = profile["birthdate"][-4:]
@@ -357,8 +323,6 @@ def least_complex(profile):
     kidb_dd = profile["kidb"][:2]
     kidb_mm = profile["kidb"][2:4]
 
-    # Convert first letters to uppercase...
-
     nameup = profile["name"].title()
     surnameup = profile["surname"].title()
     nickup = profile["nick"].title()
@@ -373,8 +337,6 @@ def least_complex(profile):
     wordsup = list(map(str.title, profile["words"]))
 
     word = profile["words"] + wordsup
-
-    # reverse a name
 
     rev_name = profile["name"][::-1]
     rev_nameup = nameup[::-1]
@@ -398,9 +360,6 @@ def least_complex(profile):
     rev_n = [rev_name, rev_nameup, rev_nick, rev_nickup]
     rev_w = [rev_wife, rev_wifeup]
     rev_k = [rev_kid, rev_kidup]
-    # Let's do some serious work! This will be a mess of code, but... who cares? :)
-
-    # Birthdays combinations
 
     bds = [
         birthdate_yy,
@@ -427,7 +386,6 @@ def least_complex(profile):
                     ):
                         bdss.append(bds1 + bds2 + bds3)
 
-                # For a woman...
     wbds = [wifeb_yy, wifeb_yyy, wifeb_yyyy, wifeb_xd, wifeb_xm, wifeb_dd, wifeb_mm]
 
     wbdss = []
@@ -445,7 +403,6 @@ def least_complex(profile):
                     ):
                         wbdss.append(wbds1 + wbds2 + wbds3)
 
-                # and a child...
     kbds = [kidb_yy, kidb_yyy, kidb_yyyy, kidb_xd, kidb_xm, kidb_dd, kidb_mm]
 
     kbdss = []
@@ -462,8 +419,6 @@ def least_complex(profile):
                         and kbds.index(kbds1) != kbds.index(kbds3)
                     ):
                         kbdss.append(kbds1 + kbds2 + kbds3)
-
-                # string combinations....
 
     kombinaac = [profile["pet"], petup, profile["company"], companyup]
 
@@ -543,7 +498,6 @@ def least_complex(profile):
     kombi[12] = [""]
     kombi[17] = [""]
     if profile["randnum"] == "y":
-        "ADD TO MEDIUM COMPLEXITY"
         kombi[13] = list(concats(kombinaa, numfrom, numto))
         kombi[14] = list(concats(kombinaac, numfrom, numto))
         kombi[15] = list(concats(kombinaaw, numfrom, numto))
@@ -612,22 +566,20 @@ def least_complex(profile):
     unique_lista = list(dict.fromkeys(uniqlist).keys())
     unique_leet = []
 
-    for (
-        x
-    ) in (
-        unique_lista
-    ):  # if you want to add more leet chars, you will need to add more lines in cupp.cfg too...
-        x = make_leet(x)  # convert to leet
+    for x in unique_lista:
+        x = make_leet(x)
         unique_leet.append(x)
 
     unique_list = unique_lista + unique_leet
 
-    unique_list_finished = []
-    unique_list_finished = [
-        x
-        for x in unique_list
-        if len(x) < CONFIG["global"]["wcto"] and len(x) > CONFIG["global"]["wcfrom"]
-    ]
+    ## Can be used to filter passwords of a certain length
+    ## wcto and wcfrom are specified in aupp.cfg
+    # unique_list_finished = []
+    # unique_list_finished = [
+    #     x
+    #     for x in unique_list
+    #     if len(x) < CONFIG["global"]["wcto"] and len(x) > CONFIG["global"]["wcfrom"]
+    # ]
     return unique_list
 
 
@@ -643,12 +595,9 @@ def concats(seq, start, stop):
             yield mystr + str(num)
 
 
-"""
-Provides additional complextiy to the wordlist utilizing the target's keywords
-"""
-
-
 def medium_complexity(profile):
+    """
+    Provides additional complextiy to the wordlist utilizing the target's keywords"""
 
     least_list = least_complex(profile)
 
@@ -756,7 +705,6 @@ def medium_complexity(profile):
                         kbdss.append(kbds1 + kbds2 + kbds3)
 
     kombi = {}
-    "ADD TO MEDIUM COMPLEXITY"
     kombi[1] = list(komb(word, bdss))
     kombi[1] += list(komb(word, bdss, "_"))
     kombi[2] = list(komb(word, wbdss))
@@ -767,11 +715,9 @@ def medium_complexity(profile):
     kombi[4] += list(komb(word, years, "_"))
     kombi[5] = [""]
     if profile["randnum"] == "y":
-        "ADD TO MEDIUM COMPLEXITY"
         kombi[5] = list(concats(word, numfrom, numto))
     komb001 = [""]
     if len(profile["spechars"]) > 0:
-        "ADD TO MEDIUM COMPLEXITY"
         komb001 = list(komb(word, profile["spechars"]))
 
     komb_unique = []
@@ -791,12 +737,10 @@ def medium_complexity(profile):
     return list(set(least_list))
 
 
-"""
-Prints team logo, creates profile, and obtains password complexity requirements from user
-"""
-
-
 def main():
+    """
+    Prints team logo, creates profile, and obtains password complexity requirements from user
+    """
     read_config("aupp.cfg")
 
     print_sniper()
@@ -816,18 +760,27 @@ def main():
             )
         )
 
-    # Phone number complexity : ran_phone_num = list(itertools.permutations((profile["phone_number"]+rev_name),len(profile["phone_number"])))
     if password_complexity == 1:
-        # call least complex function
         complete_wordlist = least_complex(target_profile)
 
     elif password_complexity == 2:
         complete_wordlist = medium_complexity(target_profile)
     else:
-        print("Most complex")
-        # call the most complex function
+        print(
+            """
+        *************************************************
+        *                UNDER CONSTRUCTION             *
+        *************************************************
+        *                                               *
+        *   [⚠️ ]  Caution: Work in Progress!  [⚠️ ]      *
+        *   New features are being built, check back    *
+        *   later for updates and enhancements.         *
+        *                                               *
+        *************************************************
+        """
+        )
+        return None
 
-    # Will take the complete list and filter it
     will_filter = str(input("Do you want to filter for password requirements? (Y/N): "))
 
     if will_filter.lower() == "y":
@@ -902,7 +855,7 @@ def main():
                 filtered_list = parallel_processing(
                     complete_wordlist, CONFIG["global"]["apple-pr"]
                 )
-    print("Youve created ",len(filtered_list)," passwords!!")
+    print("You've created ", len(filtered_list), " passwords!!")
     write_to_file(target_profile["name"], filtered_list, password_complexity)
 
 
